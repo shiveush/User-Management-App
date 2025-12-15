@@ -1,311 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>User Management</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="vendor/animate/animate.css">
+    <link rel="stylesheet" href="vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" href="vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" href="vendor/select2/select2.min.css">
+    <link rel="stylesheet" href="vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="css/util.css">
+    <link rel="stylesheet" href="css/main.css">
 
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-	
-	<!-- Google Fonts -->
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
-	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-	<link rel="stylesheet" href="vendor/animate/animate.css">
-	<link rel="stylesheet" href="vendor/css-hamburgers/hamburgers.min.css">
-	<link rel="stylesheet" href="vendor/animsition/css/animsition.min.css">
-	<link rel="stylesheet" href="vendor/select2/select2.min.css">
-	<link rel="stylesheet" href="vendor/daterangepicker/daterangepicker.css">
-	<link rel="stylesheet" href="css/util.css">
-	<link rel="stylesheet" href="css/main.css">
-
-	<style>
-		body, input, button, span {
-			font-family: 'Roboto', sans-serif !important;
-		}
-
-		.input100 {
-			font-size: 16px;
-			padding: 12px 15px;
-			margin-bottom: 15px;
-		}
-
-		.label-input100 {
-			font-size: 14px;
-			top: -5px;
-		}
-
-		.login100-form-btn {
-			font-size: 16px;
-			padding: 12px 0;
-		}
-
-		#userList li {
-			font-size: 15px;
-			line-height: 1.4em;
-			margin-bottom: 8px;
-		}
-
-		.wrap-login100 {
-			padding: 40px 30px;
-		}
-
-		.login100-form-title {
-			font-size: 28px;
-			text-align: center;
-			margin-bottom: 30px;
-		}
-	</style>
+    <style>
+        body, input, button, span { font-family: 'Roboto', sans-serif !important; }
+        .input100 { font-size: 16px; padding: 12px 15px; margin-bottom: 15px; }
+        .login100-form-btn { font-size: 16px; padding: 12px 0; }
+        #userList li { font-size: 15px; line-height: 1.4em; margin-bottom: 8px; }
+        .wrap-login100 { padding: 40px 30px; }
+        .login100-form-title { font-size: 28px; text-align: center; margin-bottom: 30px; }
+    </style>
 </head>
-
 <body style="background-color:#666666;">
 
 <div class="limiter">
-	<div class="container-login100">
-		<div class="wrap-login100">
+    <div class="container-login100">
+        <div class="wrap-login100">
 
-			<!-- LOGIN VIEW -->
-			<div id="loginView">
-				<form class="login100-form" id="loginForm">
-					<span class="login100-form-title p-b-43">
-						Login to User-Management Sys
-					</span>
+            <!-- LOGIN VIEW -->
+            <div id="loginView">
+                <form class="login100-form" id="loginForm">
+                    <span class="login100-form-title p-b-43">
+                        Login to User-Management Sys
+                    </span>
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" id="loginEmail" placeholder="Email">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100">
+                        <input class="input100" type="password" id="loginPassword" placeholder="Password">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button type="button" class="login100-form-btn" id="loginBtn">Login</button>
+                    </div>
+                    <p class="text-center p-t-10">
+                        <a href="#" id="showRegisterLink">Register new account</a>
+                    </p>
+                </form>
+            </div>
 
-					<div class="wrap-input100">
-						<input class="input100" type="text" id="loginEmail" placeholder="Email">
-						<span class="focus-input100"></span>
-					</div>
+            <!-- REGISTRATION VIEW -->
+            <div id="registerView" style="display:none;">
+                <form class="login100-form" id="registerForm">
+                    <span class="login100-form-title p-b-43">Register</span>
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" id="regName" placeholder="Name">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" id="regEmail" placeholder="Email">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100">
+                        <input class="input100" type="password" id="regPassword" placeholder="Password">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button type="button" class="login100-form-btn" id="registerBtn">Register</button>
+                    </div>
+                    <p class="text-center p-t-10">
+                        <a href="#" id="showLoginLink">Back to Login</a>
+                    </p>
+                </form>
+            </div>
 
-					<div class="wrap-input100">
-						<input class="input100" type="password" id="loginPassword" placeholder="Password">
-						<span class="focus-input100"></span>
-					</div>
+            <!-- DASHBOARD VIEW -->
+            <div id="dashboardView" style="display:none;">
+                <form class="login100-form">
+                    <span class="login100-form-title p-b-20">User Management</span>
+                    <p class="text-center p-b-20">
+                        Logged in as <b id="loggedUser"></b><br>
+                        <a href="#" id="logoutLink">Logout</a>
+                    </p>
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" id="name" placeholder="Name">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" id="email" placeholder="Email">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button type="button" class="login100-form-btn" id="addUserBtn">Add User</button>
+                    </div>
+                    <div class="p-t-30">
+                        <ul id="userList" style="list-style:none; padding-left:0;"></ul>
+                    </div>
+                </form>
+            </div>
 
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" type="button" onclick="login()">
-							Login
-						</button>
-					</div>
-
-					<p class="text-center p-t-10">
-						<a href="#" onclick="showRegister()">Register new account</a>
-					</p>
-				</form>
-			</div>
-
-			<!-- REGISTRATION VIEW -->
-			<div id="registerView" style="display:none;">
-				<form class="login100-form" id="registerForm">
-					<span class="login100-form-title p-b-43">
-						Register
-					</span>
-
-					<div class="wrap-input100">
-						<input class="input100" type="text" id="regName" placeholder="Name">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100">
-						<input class="input100" type="text" id="regEmail" placeholder="Email">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100">
-						<input class="input100" type="password" id="regPassword" placeholder="Password">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" type="button" onclick="registerUser()">
-							Register
-						</button>
-					</div>
-
-					<p class="text-center p-t-10">
-						<a href="#" onclick="showLogin()">Back to Login</a>
-					</p>
-				</form>
-			</div>
-
-			<!-- DASHBOARD VIEW -->
-			<div id="dashboardView" style="display:none;">
-				<form class="login100-form">
-					<span class="login100-form-title p-b-20">
-						User Management
-					</span>
-
-					<p class="text-center p-b-20">
-						Logged in as <b id="loggedUser"></b>
-						<br>
-						<a href="#" onclick="logout()">Logout</a>
-					</p>
-
-					<div class="wrap-input100">
-						<input class="input100" type="text" id="name" placeholder="Name">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100">
-						<input class="input100" type="text" id="email" placeholder="Email">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" type="button" onclick="addUser()">
-							Add User
-						</button>
-					</div>
-
-					<div class="p-t-30">
-						<ul id="userList" style="list-style:none; padding-left:0;"></ul>
-					</div>
-				</form>
-			</div>
-
-			<div class="login100-more" style="background-image:url('images/bg-01.jpg');"></div>
-		</div>
-	</div>
+            <div class="login100-more" style="background-image:url('images/bg-01.jpg');"></div>
+        </div>
+    </div>
 </div>
 
 <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
 <script>
-// ==========================
-// Render backend URL
-// ==========================
-const API = 'https://user-management-backend.onrender.com';
+const API = 'https://user-management-backend.onrender.com'; // your backend
 
-
-// LOGIN
-function login() {
-	const email = document.getElementById('loginEmail').value;
-	const password = document.getElementById('loginPassword').value;
-
-	fetch(`${API}/login`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ email, password })
-	})
-	.then(async res => {
-		const data = await res.json();
-		if (!res.ok) throw data;
-		localStorage.setItem('user', JSON.stringify(data.user));
-		showDashboard();
-	})
-	.catch(err => {
-		if (err.message && err.message.includes('not found')) {
-			document.getElementById('loginView').style.display = 'none';
-			document.getElementById('registerView').style.display = 'block';
-			document.getElementById('regEmail').value = email;
-			document.getElementById('regPassword').value = password;
-		} else {
-			alert(err.message || 'Failed to fetch from backend');
-		}
-	});
-}
-
-// REGISTER
-function registerUser() {
-	const name = document.getElementById('regName').value;
-	const email = document.getElementById('regEmail').value;
-	const password = document.getElementById('regPassword').value;
-
-	if (!name || !email || !password) {
-		alert('All fields required');
-		return;
-	}
-
-	fetch(`${API}/register`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ name, email, password })
-	})
-	.then(res => res.json())
-	.then(() => {
-		alert('Registration successful. Please login.');
-		showLogin();
-	})
-	.catch(err => alert(err.message || 'Failed to fetch from backend'));
-}
-
-// DASHBOARD
-function showDashboard() {
-	const user = JSON.parse(localStorage.getItem('user'));
-	if (user) {
-		document.getElementById('loginView').style.display = 'none';
-		document.getElementById('registerView').style.display = 'none';
-		document.getElementById('dashboardView').style.display = 'block';
-		document.getElementById('loggedUser').innerText = user.email;
-		loadUsers();
-	}
-}
-
+// ---- Helper functions ----
 function showLogin() {
-	document.getElementById('registerView').style.display = 'none';
-	document.getElementById('loginView').style.display = 'block';
+    document.getElementById('registerView').style.display = 'none';
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('loginView').style.display = 'block';
 }
-
 function showRegister() {
-	document.getElementById('loginView').style.display = 'none';
-	document.getElementById('registerView').style.display = 'block';
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('registerView').style.display = 'block';
 }
-
+function showDashboard() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('registerView').style.display = 'none';
+        document.getElementById('dashboardView').style.display = 'block';
+        document.getElementById('loggedUser').innerText = user.email;
+        loadUsers();
+    }
+}
 function logout() {
-	localStorage.removeItem('user');
-	location.reload();
+    localStorage.removeItem('user');
+    showLogin();
 }
 
-// USER MANAGEMENT
-function loadUsers() {
-	fetch(`${API}/users`)
-	.then(res => res.json())
-	.then(data => {
-		const list = document.getElementById('userList');
-		list.innerHTML = '';
-		data.forEach(u => {
-			const li = document.createElement('li');
-			li.style.marginBottom = '10px';
-			li.innerHTML = `
-				<div style="display:flex; justify-content:space-between; align-items:center;">
-					<span>${u.name}<br><small>${u.email}</small></span>
-					<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">Delete</button>
-				</div>
-			`;
-			list.appendChild(li);
-		});
-	});
+// ---- LOGIN ----
+document.getElementById('loginBtn').addEventListener('click', async function(e){
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        const res = await fetch(`${API}/login`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw data;
+
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showDashboard();
+    } catch(err) {
+        if(err.message && err.message.includes('not found')){
+            showRegister();
+            document.getElementById('regEmail').value = email;
+            document.getElementById('regPassword').value = password;
+        } else {
+            alert(err.message || 'Login failed');
+        }
+    }
+});
+
+// ---- REGISTER ----
+document.getElementById('registerBtn').addEventListener('click', async function(e){
+    e.preventDefault();
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    if(!name || !email || !password){ alert('All fields required'); return; }
+
+    try {
+        await fetch(`${API}/register`, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({name,email,password})
+        });
+        alert('Registration successful. Please login.');
+        showLogin();
+    } catch(err){
+        alert(err.message || 'Registration failed');
+    }
+});
+
+// ---- DASHBOARD USER CRUD ----
+function loadUsers(){
+    fetch(`${API}/users`)
+        .then(res=>res.json())
+        .then(data=>{
+            const list = document.getElementById('userList');
+            list.innerHTML = '';
+            data.forEach(u=>{
+                const li = document.createElement('li');
+                li.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>${u.name}<br><small>${u.email}</small></span>
+                    <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">Delete</button>
+                </div>`;
+                list.appendChild(li);
+            });
+        });
 }
 
-function addUser() {
-	const name = document.getElementById('name').value;
-	const email = document.getElementById('email').value;
+document.getElementById('addUserBtn').addEventListener('click', async function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    if(!name||!email){ alert('Fill all fields'); return; }
 
-	if (!name || !email) {
-		alert('Fill all fields');
-		return;
-	}
+    await fetch(`${API}/users`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name,email})
+    });
+    document.getElementById('name').value='';
+    document.getElementById('email').value='';
+    loadUsers();
+});
 
-	fetch(`${API}/users`, {
-		method:'POST',
-		headers:{ 'Content-Type':'application/json' },
-		body: JSON.stringify({ name, email })
-	})
-	.then(() => {
-		document.getElementById('name').value = '';
-		document.getElementById('email').value = '';
-		loadUsers();
-	});
+function deleteUser(id){
+    fetch(`${API}/users/${id}`, {method:'DELETE'})
+        .then(()=>loadUsers());
 }
 
-function deleteUser(id) {
-	fetch(`${API}/users/${id}`, { method:'DELETE' })
-	.then(() => loadUsers());
-}
+// ---- LINK HANDLERS ----
+document.getElementById('showRegisterLink').addEventListener('click', function(e){ e.preventDefault(); showRegister(); });
+document.getElementById('showLoginLink').addEventListener('click', function(e){ e.preventDefault(); showLogin(); });
+document.getElementById('logoutLink').addEventListener('click', function(e){ e.preventDefault(); logout(); });
 
-// Initialize
+// ---- INIT ----
 showDashboard();
 </script>
 
