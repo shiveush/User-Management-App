@@ -7,10 +7,18 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ==========================
+// CORS configuration
+// ==========================
+app.use(cors({
+    origin: '*',
+    methods: ['GET','POST','DELETE','PUT','OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
 app.use(express.json());
 
 const USERS_FILE = path.join(__dirname, 'users.json');
@@ -42,8 +50,7 @@ app.post('/register', async (req, res) => {
   if (!name || !email || !password) return res.status(400).json({ message: 'All fields required' });
 
   const users = await readUsers();
-  const existingUser = users.find(u => u.email === email);
-  if (existingUser) return res.status(409).json({ message: 'User already exists' });
+  if (users.find(u => u.email === email)) return res.status(409).json({ message: 'User already exists' });
 
   const passwordHash = await bcrypt.hash(password, 10);
   users.push({ id: Date.now(), name, email, passwordHash });
@@ -95,5 +102,5 @@ app.post('/users', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Render URL: https://user-management-app-dres.onrender.com/`);
+  console.log(`Render URL: https://user-management-app-dres.onrender.com`);
 });

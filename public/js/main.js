@@ -23,7 +23,7 @@
     var input = $('.validate-input .input100');
 
     $('.validate-form').on('submit', function(e){
-        e.preventDefault(); // prevent default submit
+        e.preventDefault();
         var check = true;
 
         for(var i=0; i<input.length; i++) {
