@@ -5,7 +5,9 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+
+// Render dynamically assigns a port
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -71,10 +73,6 @@ app.delete('/users/:id', async (req, res) => {
   res.json({ message: 'User deleted' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 // ADD USER (from dashboard)
 app.post('/users', async (req, res) => {
   const { name, email } = req.body;
@@ -99,4 +97,9 @@ app.post('/users', async (req, res) => {
 
   await writeUsers(users);
   res.json({ message: 'User added successfully' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Render URL: https://user-management-backend.onrender.com`);
 });
