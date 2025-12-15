@@ -6,20 +6,15 @@
     // ==========================
     const API = 'https://user-management-app-dres.onrender.com';
 
-    /*==================================================================
-    [ Focus Inputs ]*/
+    /* Focus Inputs */
     $('.input100').each(function(){
         $(this).on('blur', function(){
-            if($(this).val().trim() != "") {
-                $(this).addClass('has-val');
-            } else {
-                $(this).removeClass('has-val');
-            }
+            if($(this).val().trim() != "") $(this).addClass('has-val');
+            else $(this).removeClass('has-val');
         });    
     });
 
-    /*==================================================================
-    [ Validate Forms ]*/
+    /* Validate Forms */
     var input = $('.validate-input .input100');
 
     $('.validate-form').on('submit', function(e){
@@ -41,39 +36,24 @@
     });
 
     $('.validate-form .input100').each(function(){
-        $(this).focus(function(){
-           hideValidate(this);
-        });
+        $(this).focus(function(){ hideValidate(this); });
     });
 
-    function validate (input) {
+    function validate(input) {
         if($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
-            if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
-                return false;
-            }
+            if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) return false;
         } else {
-            if($(input).val().trim() == ''){
-                return false;
-            }
+            if($(input).val().trim() == '') return false;
         }
     }
 
-    function showValidate(input) {
-        var thisAlert = $(input).parent();
-        $(thisAlert).addClass('alert-validate');
-    }
+    function showValidate(input){ $(input).parent().addClass('alert-validate'); }
+    function hideValidate(input){ $(input).parent().removeClass('alert-validate'); }
 
-    function hideValidate(input) {
-        var thisAlert = $(input).parent();
-        $(thisAlert).removeClass('alert-validate');
-    }
-
-    /*==================================================================
-    [ Login Handler ]*/
+    /* Login Handler */
     async function loginHandler() {
         const email = $('#loginEmail').val();
         const password = $('#loginPassword').val();
-
         try {
             const res = await fetch(`${API}/login`, {
                 method: 'POST',
@@ -81,25 +61,16 @@
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
-            if(res.ok) {
-                alert(`Login successful! Welcome ${data.user.name}`);
-                loadUsers();
-            } else {
-                alert(data.message);
-            }
-        } catch(err) {
-            alert('Failed to connect to backend');
-            console.error(err);
-        }
+            if(res.ok){ alert(`Login successful! Welcome ${data.user.name}`); loadUsers(); }
+            else alert(data.message);
+        } catch(err){ alert('Failed to connect to backend'); console.error(err); }
     }
 
-    /*==================================================================
-    [ Register Handler ]*/
+    /* Register Handler */
     async function registerHandler() {
         const name = $('#registerName').val();
         const email = $('#registerEmail').val();
         const password = $('#registerPassword').val();
-
         try {
             const res = await fetch(`${API}/register`, {
                 method: 'POST',
@@ -107,19 +78,12 @@
                 body: JSON.stringify({ name, email, password })
             });
             const data = await res.json();
-            if(res.ok) {
-                alert('Registration successful!');
-            } else {
-                alert(data.message);
-            }
-        } catch(err) {
-            alert('Failed to connect to backend');
-            console.error(err);
-        }
+            if(res.ok) alert('Registration successful!');
+            else alert(data.message);
+        } catch(err){ alert('Failed to connect to backend'); console.error(err); }
     }
 
-    /*==================================================================
-    [ Load Users ]*/
+    /* Load Users */
     async function loadUsers() {
         try {
             const res = await fetch(`${API}/users`);
@@ -135,35 +99,26 @@
                 `);
             });
             $('.deleteUserBtn').click(deleteUserHandler);
-        } catch(err) {
-            console.error('Failed to load users', err);
-        }
+        } catch(err){ console.error('Failed to load users', err); }
     }
 
-    /*==================================================================
-    [ Delete User Handler ]*/
+    /* Delete User */
     async function deleteUserHandler() {
         const id = $(this).data('id');
         if(!confirm('Are you sure you want to delete this user?')) return;
-
         try {
             const res = await fetch(`${API}/users/${id}`, { method: 'DELETE' });
             const data = await res.json();
             alert(data.message);
             loadUsers();
-        } catch(err) {
-            alert('Failed to connect to backend');
-            console.error(err);
-        }
+        } catch(err){ alert('Failed to connect to backend'); console.error(err); }
     }
 
-    /*==================================================================
-    [ Add User Handler ]*/
+    /* Add User */
     $('#addUserForm').on('submit', async function(e){
         e.preventDefault();
         const name = $('#addUserName').val();
         const email = $('#addUserEmail').val();
-
         try {
             const res = await fetch(`${API}/users`, {
                 method: 'POST',
@@ -171,22 +126,12 @@
                 body: JSON.stringify({ name, email })
             });
             const data = await res.json();
-            if(res.ok) {
-                alert(data.message);
-                loadUsers();
-                $('#addUserForm')[0].reset();
-            } else {
-                alert(data.message);
-            }
-        } catch(err) {
-            alert('Failed to connect to backend');
-            console.error(err);
-        }
+            if(res.ok){ alert(data.message); loadUsers(); $('#addUserForm')[0].reset(); }
+            else alert(data.message);
+        } catch(err){ alert('Failed to connect to backend'); console.error(err); }
     });
 
     // Initial load
-    $(document).ready(() => {
-        loadUsers();
-    });
+    $(document).ready(() => { loadUsers(); });
 
 })(jQuery);

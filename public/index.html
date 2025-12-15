@@ -68,7 +68,7 @@
 
 			<!-- LOGIN VIEW -->
 			<div id="loginView">
-				<form class="login100-form">
+				<form class="login100-form" id="loginForm">
 					<span class="login100-form-title p-b-43">
 						Login to User-Management Sys
 					</span>
@@ -88,12 +88,16 @@
 							Login
 						</button>
 					</div>
+
+					<p class="text-center p-t-10">
+						<a href="#" onclick="showRegister()">Register new account</a>
+					</p>
 				</form>
 			</div>
 
 			<!-- REGISTRATION VIEW -->
 			<div id="registerView" style="display:none;">
-				<form class="login100-form">
+				<form class="login100-form" id="registerForm">
 					<span class="login100-form-title p-b-43">
 						Register
 					</span>
@@ -169,7 +173,10 @@
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
 <script>
-const API = 'http://localhost:3000';
+// ==========================
+// Render backend URL
+// ==========================
+const API = 'https://user-management-app-dres.onrender.com';
 
 // LOGIN
 function login() {
@@ -188,13 +195,13 @@ function login() {
 		showDashboard();
 	})
 	.catch(err => {
-		if (err.message.includes('not found')) {
+		if (err.message && err.message.includes('not found')) {
 			document.getElementById('loginView').style.display = 'none';
 			document.getElementById('registerView').style.display = 'block';
 			document.getElementById('regEmail').value = email;
 			document.getElementById('regPassword').value = password;
 		} else {
-			alert(err.message);
+			alert(err.message || 'Failed to fetch from backend');
 		}
 	});
 }
@@ -220,7 +227,7 @@ function registerUser() {
 		alert('Registration successful. Please login.');
 		showLogin();
 	})
-	.catch(err => alert(err.message));
+	.catch(err => alert(err.message || 'Failed to fetch from backend'));
 }
 
 // DASHBOARD
@@ -238,6 +245,11 @@ function showDashboard() {
 function showLogin() {
 	document.getElementById('registerView').style.display = 'none';
 	document.getElementById('loginView').style.display = 'block';
+}
+
+function showRegister() {
+	document.getElementById('loginView').style.display = 'none';
+	document.getElementById('registerView').style.display = 'block';
 }
 
 function logout() {
