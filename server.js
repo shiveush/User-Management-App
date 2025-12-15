@@ -7,82 +7,127 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ==========================
-// CORS configuration
-// ==========================
+/* =======================
+   MIDDLEWARE
+======================= */
 app.use(cors({
-    origin: '*',
-    methods: ['GET','POST','DELETE','PUT','OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
 }));
-
-// Handle OPTIONS preflight requests
-app.options('/*', cors()); // fixed PathError
-
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 
+/* =======================
+   DATA FILE
+======================= */
 const USERS_FILE = path.join(__dirname, 'users.json');
 
-// Auto-create users.json if missing
 async function readUsers() {
   try {
     const data = await fs.readFile(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch {
-    await fs.writeFile(USERS_FILE, '[]');
     return [];
   }
 }
 
-// Write users
 async function writeUsers(users) {
   await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 }
 
-// Serve main page
+/* =======================
+   ROUTES
+======================= */
+
+// Health check (important for Render sanity)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.send('User Management Backend is running');
 });
 
-// REGISTER
+/* ---------- REGISTER ---------- */
 app.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
-  if (!name || !email || !password) return res.status(400).json({ message: 'All fields required' });
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'All fields required' });
+  }
 
   const users = await readUsers();
-  if (users.find(u => u.email === email)) return res.status(409).json({ message: 'User already exists' });
+  if (users.find(u => u.email === email)) {
+    return res.status(409).json({ message: 'User already exists' });
+  }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  users.push({ id: Date.now(), name, email, passwordHash });
-  await writeUsers(users);
 
+  users.push({
+    id: Date.now(),
+    name,
+    email,
+    passwordHash
+  });
+
+  await writeUsers(users);
   res.json({ message: 'User registered successfully' });
 });
 
-// LOGIN
+/* ---------- LOGIN ---------- */
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
   const users = await readUsers();
   const user = users.find(u => u.email === email);
-  if (!user) return res.status(404).json({ message: 'User not found. Please register.' });
 
-  const isMatch = await bcrypt.compare(password, user.passwordHash);
-  if (!isMatch) return res.status(401).json({ message: 'Wrong password' });
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
 
-  res.json({ message: 'Login successful', user: { name: user.name, email: user.email } });
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) {
+    return res.status(401).json({ message: 'Wrong password' });
+  }
+
+  res.json({
+    message: 'Login successful',
+    user: { name: user.name, email: user.email }
+  });
 });
 
-// GET USERS
+/* ---------- GET USERS ---------- */
 app.get('/users', async (req, res) => {
   const users = await readUsers();
-  const safeUsers = users.map(u => ({ id: u.id, name: u.name, email: u.email }));
-  res.json(safeUsers);
+  res.json(users.map(u => ({
+    id: u.id,
+    name: u.name,
+    email: u.email
+  })));
 });
 
-// DELETE USER
+/* ---------- ADD USER ---------- */
+app.post('/users', async (req, res) => {
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ message: 'Name and email required' });
+  }
+
+  const users = await readUsers();
+  if (users.find(u => u.email === email)) {
+    return res.status(409).json({ message: 'User already exists' });
+  }
+
+  users.push({
+    id: Date.now(),
+    name,
+    email,
+    passwordHash: 'N/A'
+  });
+
+  await writeUsers(users);
+  res.json({ message: 'User added successfully' });
+});
+
+/* ---------- DELETE USER ---------- */
 app.delete('/users/:id', async (req, res) => {
   let users = await readUsers();
   users = users.filter(u => u.id != req.params.id);
@@ -90,20 +135,9 @@ app.delete('/users/:id', async (req, res) => {
   res.json({ message: 'User deleted' });
 });
 
-// ADD USER (from dashboard)
-app.post('/users', async (req, res) => {
-  const { name, email } = req.body;
-  if (!name || !email) return res.status(400).json({ message: 'Name and email required' });
-
-  const users = await readUsers();
-  if (users.find(u => u.email === email)) return res.status(409).json({ message: 'User already exists' });
-
-  users.push({ id: Date.now(), name, email, passwordHash: 'N/A' });
-  await writeUsers(users);
-  res.json({ message: 'User added successfully' });
-});
-
+/* =======================
+   START SERVER
+======================= */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Render URL: https://user-management-app-dres.onrender.com`);
 });
