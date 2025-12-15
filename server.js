@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==========================
-// CORS configuration + preflight fix
+// CORS configuration
 // ==========================
 app.use(cors({
     origin: '*',
@@ -17,7 +17,7 @@ app.use(cors({
 }));
 
 // Handle OPTIONS preflight requests
-app.options('*', cors());
+app.options('/*', cors()); // fixed PathError
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'public')));
