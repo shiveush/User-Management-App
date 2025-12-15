@@ -95,5 +95,5 @@ app.post('/users', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Render URL: https://user-management-backend.onrender.com`);
+  console.log(`Render URL: https://user-management-app-dres.onrender.com/`);
 });

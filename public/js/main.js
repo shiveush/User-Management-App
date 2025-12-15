@@ -1,8 +1,10 @@
 (function ($) {
     "use strict";
 
-    // === RENDER BACKEND URL ===
-    const API = 'https://user-management-backend.onrender.com';
+    // ==========================
+    // Render backend URL
+    // ==========================
+    const API = 'https://user-management-app-dres.onrender.com';
 
     /*==================================================================
     [ Focus Inputs ]*/
@@ -13,7 +15,7 @@
             } else {
                 $(this).removeClass('has-val');
             }
-        })    
+        });    
     });
 
     /*==================================================================
@@ -21,7 +23,7 @@
     var input = $('.validate-input .input100');
 
     $('.validate-form').on('submit', function(e){
-        e.preventDefault(); // prevent default submission
+        e.preventDefault(); // prevent default submit
         var check = true;
 
         for(var i=0; i<input.length; i++) {
@@ -33,7 +35,6 @@
 
         if(!check) return;
 
-        // Decide which form is being submitted
         const formId = $(this).attr('id');
         if(formId === 'loginForm') loginHandler();
         if(formId === 'registerForm') registerHandler();
@@ -82,7 +83,7 @@
             const data = await res.json();
             if(res.ok) {
                 alert(`Login successful! Welcome ${data.user.name}`);
-                loadUsers(); // load dashboard users
+                loadUsers();
             } else {
                 alert(data.message);
             }
@@ -118,12 +119,12 @@
     }
 
     /*==================================================================
-    [ Load Users for Dashboard ]*/
+    [ Load Users ]*/
     async function loadUsers() {
         try {
             const res = await fetch(`${API}/users`);
             const users = await res.json();
-            const userList = $('#userList'); // assume UL or table in HTML
+            const userList = $('#userList'); 
             userList.empty();
             users.forEach(u => {
                 userList.append(`
@@ -133,7 +134,6 @@
                     </li>
                 `);
             });
-            // attach delete handlers
             $('.deleteUserBtn').click(deleteUserHandler);
         } catch(err) {
             console.error('Failed to load users', err);
@@ -158,7 +158,7 @@
     }
 
     /*==================================================================
-    [ Add User Handler - Dashboard ]*/
+    [ Add User Handler ]*/
     $('#addUserForm').on('submit', async function(e){
         e.preventDefault();
         const name = $('#addUserName').val();
@@ -184,7 +184,7 @@
         }
     });
 
-    // Initial load for dashboard if logged in
+    // Initial load
     $(document).ready(() => {
         loadUsers();
     });
