@@ -5,29 +5,36 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
-
-// Render dynamically assigns a port
 const PORT = process.env.PORT || 3000;
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 app.use(express.json());
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 
-// Helper: read users.json
+// Auto-create users.json if missing
 async function readUsers() {
   try {
     const data = await fs.readFile(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch {
+    await fs.writeFile(USERS_FILE, '[]');
     return [];
   }
 }
 
-// Helper: write users.json
+// Write users
 async function writeUsers(users) {
   await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 }
+
+// Serve main page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // REGISTER
 app.post('/register', async (req, res) => {
@@ -76,25 +83,12 @@ app.delete('/users/:id', async (req, res) => {
 // ADD USER (from dashboard)
 app.post('/users', async (req, res) => {
   const { name, email } = req.body;
-
-  if (!name || !email) {
-    return res.status(400).json({ message: 'Name and email required' });
-  }
+  if (!name || !email) return res.status(400).json({ message: 'Name and email required' });
 
   const users = await readUsers();
+  if (users.find(u => u.email === email)) return res.status(409).json({ message: 'User already exists' });
 
-  const exists = users.find(u => u.email === email);
-  if (exists) {
-    return res.status(409).json({ message: 'User already exists' });
-  }
-
-  users.push({
-    id: Date.now(),
-    name,
-    email,
-    passwordHash: 'N/A' // dashboard-created user
-  });
-
+  users.push({ id: Date.now(), name, email, passwordHash: 'N/A' });
   await writeUsers(users);
   res.json({ message: 'User added successfully' });
 });
